@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopermotion Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Librairie Chart.js -->
+</head>
+<body>
+    <nav>
+        <h1>Shopermotion</h1>
+        <ul>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#behavior-analysis">Behavior Analysis</a></li>
+            <li><a href="#ai-predictions">AI Predictions</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Dashboard Section -->
+        <section id="dashboard">
+            <h2>Dashboard</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Top Products</h3>
+                    <canvas id="topProductsChart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Peak Buying Times</h3>
+                    <canvas id="peakTimesChart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Customer Loyalty</h3>
+                    <canvas id="customerLoyaltyChart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Most Returned Products</h3>
+                    <ul>
+                        <li>Fresh Tomatoes - 42%</li>
+                        <li>Cooking Oil 5L - 30%</li>
+                        <li>Frozen Fries - 18%</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Behavior Analysis Section -->
+        <section id="behavior-analysis">
+            <h2>Behavior Analysis</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Sales by Customer Profile</h3>
+                    <canvas id="customerProfileChart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Store Heatmap</h3>
+                    <img src="heatmap.png" alt="Store Heatmap" class="heatmap">
+                </div>
+                <div class="card">
+                    <h3>Employee Influence</h3>
+                    <p>Sales increased by 15% when Emma was on shift.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Predictions Section -->
+        <section id="ai-predictions">
+            <h2>AI Predictions</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Predicted Top-Selling Product</h3>
+                    <p>Beef Tenderloin - Estimated Sales: $10,000</p>
+                </div>
+                <div class="card">
+                    <h3>Sales Anomaly Detection</h3>
+                    <p>Potential fraud detected in Region 2 - $5,000 flagged.</p>
+                </div>
+                <div class="card">
+                    <h3>Weather Impact</h3>
+                    <p>Rainy days lead to a 30% increase in soup ingredients sales.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Top Products Chart
+        const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+        new Chart(topProductsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Fresh Tomatoes', 'Cooking Oil 5L', 'Chicken Breasts', 'Frozen Fries'],
+                datasets: [{
+                    label: 'Sales (€)',
+                    data: [1200, 950, 800, 700],
+                    backgroundColor: ['red', 'yellow', 'orange', 'blue']
+                }]
+            }
+        });
+
+        // Peak Buying Times Chart
+        const peakTimesCtx = document.getElementById('peakTimesChart').getContext('2d');
+        new Chart(peakTimesCtx, {
+            type: 'line',
+            data: {
+                labels: ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM'],
+                datasets: [{
+                    label: 'Purchases',
+                    data: [20, 50, 90, 70, 40],
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            }
+        });
+
+        // Customer Loyalty Chart
+        const customerLoyaltyCtx = document.getElementById('customerLoyaltyChart').getContext('2d');
+        new Chart(customerLoyaltyCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Regular Customers', 'Occasional Customers'],
+                datasets: [{
+                    label: 'Percentage',
+                    data: [65, 35],
+                    backgroundColor: ['green', 'gray']
+                }]
+            }
+        });
+
+        // Sales by Customer Profile Chart
+        const customerProfileCtx = document.getElementById('customerProfileChart').getContext('2d');
+        new Chart(customerProfileCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Restaurants', 'Cafés', 'Hotels', 'Caterers'],
+                datasets: [{
+                    label: 'Sales (%)',
+                    data: [40, 25, 20, 15],
+                    backgroundColor: ['purple', 'cyan', 'yellow', 'orange']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
