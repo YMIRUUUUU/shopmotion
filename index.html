@@ -4,8 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopermotion Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Librairie Chart.js -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1em;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 1em;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1em;
+        }
+
+        .card {
+            background-color: white;
+            padding: 1em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .heatmap {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #ddd;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .heatmap div {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -51,7 +119,7 @@
                 </div>
                 <div class="card">
                     <h3>Store Heatmap</h3>
-                    <img src="heatmap.png" alt="Store Heatmap" class="heatmap">
+                    <div class="heatmap" id="heatmap"></div>
                 </div>
                 <div class="card">
                     <h3>Employee Influence</h3>
@@ -66,15 +134,15 @@
             <div class="cards">
                 <div class="card">
                     <h3>Predicted Top-Selling Product</h3>
-                    <p>Beef Tenderloin - Estimated Sales: $10,000</p>
+                    <p>Beef Tenderloin - Estimated Sales: €250,000</p>
                 </div>
                 <div class="card">
                     <h3>Sales Anomaly Detection</h3>
-                    <p>Potential fraud detected in Region 2 - $5,000 flagged.</p>
+                    <p>Potential fraud detected in Region 2 - €15,000 flagged.</p>
                 </div>
                 <div class="card">
                     <h3>Weather Impact</h3>
-                    <p>Rainy days lead to a 30% increase in soup ingredients sales.</p>
+                    <p>Rainy days lead to a 50% increase in soup ingredients sales.</p>
                 </div>
             </div>
         </section>
@@ -86,7 +154,31 @@
             return Array.from({ length: count }, () => Math.floor(Math.random() * max) + 1);
         }
 
-        // Top Products Chart
+        // Randomize Heatmap Points
+        function generateHeatmapPoints(containerId, numPoints) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Clear existing points
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            for (let i = 0; i < numPoints; i++) {
+                const size = Math.random() * 50 + 20; // Random size between 20 and 70
+                const x = Math.random() * (containerWidth - size);
+                const y = Math.random() * (containerHeight - size);
+                const intensity = Math.random() * 255;
+
+                const point = document.createElement('div');
+                point.style.width = `${size}px`;
+                point.style.height = `${size}px`;
+                point.style.backgroundColor = `rgba(255, 0, 0, ${intensity / 255})`;
+                point.style.left = `${x}px`;
+                point.style.top = `${y}px`;
+
+                container.appendChild(point);
+            }
+        }
+
+        // Create Charts
         const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
         new Chart(topProductsCtx, {
             type: 'bar',
@@ -94,13 +186,12 @@
                 labels: ['Fresh Tomatoes', 'Cooking Oil 5L', 'Chicken Breasts', 'Frozen Fries'],
                 datasets: [{
                     label: 'Sales (€)',
-                    data: getRandomData(4, 1500),
+                    data: getRandomData(4, 50000),
                     backgroundColor: ['red', 'yellow', 'orange', 'blue']
                 }]
             }
         });
 
-        // Peak Buying Times Chart
         const peakTimesCtx = document.getElementById('peakTimesChart').getContext('2d');
         new Chart(peakTimesCtx, {
             type: 'line',
@@ -108,14 +199,13 @@
                 labels: ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM'],
                 datasets: [{
                     label: 'Purchases',
-                    data: getRandomData(5, 100),
+                    data: getRandomData(5, 500),
                     borderColor: 'blue',
                     fill: false
                 }]
             }
         });
 
-        // Customer Loyalty Chart
         const customerLoyaltyCtx = document.getElementById('customerLoyaltyChart').getContext('2d');
         new Chart(customerLoyaltyCtx, {
             type: 'pie',
@@ -129,7 +219,6 @@
             }
         });
 
-        // Most Returned Products Chart
         const mostReturnedProductsCtx = document.getElementById('mostReturnedProductsChart').getContext('2d');
         new Chart(mostReturnedProductsCtx, {
             type: 'bar',
@@ -137,7 +226,7 @@
                 labels: ['Fresh Tomatoes', 'Cooking Oil 5L', 'Chicken Breasts', 'Frozen Fries'],
                 datasets: [{
                     label: 'Return Rate (%)',
-                    data: getRandomData(4, 50),
+                    data: getRandomData(4, 100),
                     backgroundColor: ['red', 'yellow', 'orange', 'blue']
                 }]
             },
@@ -151,7 +240,6 @@
             }
         });
 
-        // Sales by Customer Profile Chart
         const customerProfileCtx = document.getElementById('customerProfileChart').getContext('2d');
         new Chart(customerProfileCtx, {
             type: 'doughnut',
@@ -164,6 +252,9 @@
                 }]
             }
         });
+
+        // Generate Heatmap
+        generateHeatmapPoints('heatmap', 50); // Generate 50 random points
     </script>
 </body>
 </html>
