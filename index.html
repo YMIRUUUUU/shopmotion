@@ -39,12 +39,14 @@
 
         main {
             padding: 1em;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1em;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5em;
         }
 
         .card {
@@ -65,6 +67,7 @@
             background-color: #ddd;
             border: 2px solid #ccc;
             border-radius: 8px;
+            overflow: hidden;
         }
 
         .heatmap div {
@@ -123,7 +126,7 @@
                 </div>
                 <div class="card">
                     <h3>Employee Influence</h3>
-                    <p>Sales increased by 15% when Emma was on shift.</p>
+                    <canvas id="employeeInfluenceChart"></canvas>
                 </div>
             </div>
         </section>
@@ -154,7 +157,7 @@
             return Array.from({ length: count }, () => Math.floor(Math.random() * max) + 1);
         }
 
-        // Randomize Heatmap Points
+        // Generate Heatmap Points
         function generateHeatmapPoints(containerId, numPoints) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Clear existing points
@@ -162,7 +165,7 @@
             const containerHeight = container.offsetHeight;
 
             for (let i = 0; i < numPoints; i++) {
-                const size = Math.random() * 50 + 20; // Random size between 20 and 70
+                const size = Math.random() * 60 + 20; // Random size between 20 and 80
                 const x = Math.random() * (containerWidth - size);
                 const y = Math.random() * (containerHeight - size);
                 const intensity = Math.random() * 255;
@@ -178,7 +181,7 @@
             }
         }
 
-        // Create Charts
+        // Top Products Chart
         const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
         new Chart(topProductsCtx, {
             type: 'bar',
@@ -192,6 +195,7 @@
             }
         });
 
+        // Peak Buying Times Chart
         const peakTimesCtx = document.getElementById('peakTimesChart').getContext('2d');
         new Chart(peakTimesCtx, {
             type: 'line',
@@ -206,6 +210,7 @@
             }
         });
 
+        // Customer Loyalty Chart
         const customerLoyaltyCtx = document.getElementById('customerLoyaltyChart').getContext('2d');
         new Chart(customerLoyaltyCtx, {
             type: 'pie',
@@ -219,6 +224,7 @@
             }
         });
 
+        // Most Returned Products Chart
         const mostReturnedProductsCtx = document.getElementById('mostReturnedProductsChart').getContext('2d');
         new Chart(mostReturnedProductsCtx, {
             type: 'bar',
@@ -240,6 +246,22 @@
             }
         });
 
+        // Employee Influence Chart
+        const employeeInfluenceCtx = document.getElementById('employeeInfluenceChart').getContext('2d');
+        new Chart(employeeInfluenceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                datasets: [{
+                    label: 'Sales Increase (%)',
+                    data: getRandomData(5, 50),
+                    borderColor: 'green',
+                    fill: false
+                }]
+            }
+        });
+
+        // Sales by Customer Profile Chart
         const customerProfileCtx = document.getElementById('customerProfileChart').getContext('2d');
         new Chart(customerProfileCtx, {
             type: 'doughnut',
@@ -248,7 +270,9 @@
                 datasets: [{
                     label: 'Sales (%)',
                     data: getRandomData(4, 100),
-                    backgroundColor: ['purple', 'cyan', 'yellow', 'orange']
+                    backgroundColor: ['purple', 'cyan', 'yellow
+
+', 'orange']
                 }]
             }
         });
