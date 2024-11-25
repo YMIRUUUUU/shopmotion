@@ -74,8 +74,14 @@
         .heatmap div {
             position: absolute;
             border-radius: 50%;
-            pointer-events: none;
+            pointer-events: auto;
             opacity: 0.8;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .heatmap div:hover {
+            transform: scale(1.5);
+            background-color: rgba(0, 255, 0, 0.8);
         }
     </style>
 </head>
@@ -131,6 +137,25 @@
                 </div>
             </div>
         </section>
+
+        <!-- AI Predictions Section -->
+        <section id="ai-predictions">
+            <h2>AI Predictions</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Predicted Top-Selling Product</h3>
+                    <p>Beef Tenderloin - Estimated Sales: €250,000</p>
+                </div>
+                <div class="card">
+                    <h3>Sales Anomaly Detection</h3>
+                    <p>Potential fraud detected in Region 2 - €15,000 flagged.</p>
+                </div>
+                <div class="card">
+                    <h3>Weather Impact</h3>
+                    <p>Rainy days lead to a 50% increase in soup ingredients sales.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -141,7 +166,7 @@
             }
 
             // Generate Heatmap Points
-            function generateHeatmapPoints(containerId, numPoints) {
+            function generateInteractiveHeatmap(containerId, numPoints) {
                 const container = document.getElementById(containerId);
                 container.innerHTML = ''; // Clear existing points
                 const containerWidth = container.offsetWidth;
@@ -245,8 +270,8 @@
                 }
             });
 
-            // Generate Heatmap
-            generateHeatmapPoints('heatmap', 50); // Generate 50 random points
+            // Generate Interactive Heatmap
+            generateInteractiveHeatmap('heatmap', 50); // Generate 50 random points
         });
     </script>
 </body>
