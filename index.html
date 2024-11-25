@@ -36,11 +36,7 @@
                 </div>
                 <div class="card">
                     <h3>Most Returned Products</h3>
-                    <ul>
-                        <li>Fresh Tomatoes - 42%</li>
-                        <li>Cooking Oil 5L - 30%</li>
-                        <li>Frozen Fries - 18%</li>
-                    </ul>
+                    <canvas id="mostReturnedProductsChart"></canvas>
                 </div>
             </div>
         </section>
@@ -85,6 +81,11 @@
     </main>
 
     <script>
+        // Randomize Data Function
+        function getRandomData(count, max) {
+            return Array.from({ length: count }, () => Math.floor(Math.random() * max) + 1);
+        }
+
         // Top Products Chart
         const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
         new Chart(topProductsCtx, {
@@ -93,7 +94,7 @@
                 labels: ['Fresh Tomatoes', 'Cooking Oil 5L', 'Chicken Breasts', 'Frozen Fries'],
                 datasets: [{
                     label: 'Sales (€)',
-                    data: [1200, 950, 800, 700],
+                    data: getRandomData(4, 1500),
                     backgroundColor: ['red', 'yellow', 'orange', 'blue']
                 }]
             }
@@ -107,7 +108,7 @@
                 labels: ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM'],
                 datasets: [{
                     label: 'Purchases',
-                    data: [20, 50, 90, 70, 40],
+                    data: getRandomData(5, 100),
                     borderColor: 'blue',
                     fill: false
                 }]
@@ -122,9 +123,31 @@
                 labels: ['Regular Customers', 'Occasional Customers'],
                 datasets: [{
                     label: 'Percentage',
-                    data: [65, 35],
+                    data: getRandomData(2, 100),
                     backgroundColor: ['green', 'gray']
                 }]
+            }
+        });
+
+        // Most Returned Products Chart
+        const mostReturnedProductsCtx = document.getElementById('mostReturnedProductsChart').getContext('2d');
+        new Chart(mostReturnedProductsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Fresh Tomatoes', 'Cooking Oil 5L', 'Chicken Breasts', 'Frozen Fries'],
+                datasets: [{
+                    label: 'Return Rate (%)',
+                    data: getRandomData(4, 50),
+                    backgroundColor: ['red', 'yellow', 'orange', 'blue']
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
             }
         });
 
@@ -136,7 +159,7 @@
                 labels: ['Restaurants', 'Cafés', 'Hotels', 'Caterers'],
                 datasets: [{
                     label: 'Sales (%)',
-                    data: [40, 25, 20, 15],
+                    data: getRandomData(4, 100),
                     backgroundColor: ['purple', 'cyan', 'yellow', 'orange']
                 }]
             }
