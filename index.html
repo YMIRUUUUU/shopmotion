@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopermotion Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Bibliothèque Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             padding: 0;
             background-color: #f4f4f9;
         }
-
+        
         nav {
             background-color: #333;
             color: white;
@@ -58,7 +58,7 @@
 
         canvas {
             max-width: 100%;
-            height: 300px; /* Assure une hauteur pour les graphiques */
+            height: 300px;
         }
 
         .heatmap {
@@ -83,10 +83,33 @@
             transform: scale(1.5);
             background-color: rgba(0, 255, 0, 0.8);
         }
+
+        /* hiden sanke section */
+        .hidden {
+            display: none;
+        }
+        #sankeCanvas {
+            background: #222;
+            border: 2px solid #ccc;
+            display: block;
+            margin: 20px auto;
+        }
+        .sanke-ctrl {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .sanke-ctrl button {
+            padding: 8px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
-    
     <nav>
         <h1>Shopermotion</h1>
         <ul>
@@ -97,7 +120,6 @@
     </nav>
 
     <main>
-        <!-- Dashboard Section -->
         <section id="dashboard">
             <h2>Dashboard</h2>
             <div class="cards">
@@ -120,7 +142,6 @@
             </div>
         </section>
 
-        <!-- Behavior Analysis Section -->
         <section id="behavior-analysis">
             <h2>Behavior Analysis</h2>
             <div class="cards">
@@ -139,7 +160,6 @@
             </div>
         </section>
 
-        <!-- AI Predictions Section -->
         <section id="ai-predictions">
             <h2>AI Predictions</h2>
             <div class="cards">
@@ -153,28 +173,36 @@
                 </div>
                 <div class="card">
                     <h3>Weather Impact</h3>
-                    <p>Rainy days lead to a 50% increase in soup ingredients sales.</p>
+                    <p>Rainy days lead to a 50% increase in soup ingrdients sales.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- sanke hidden -->
+        <section id="sankeZone" class="hidden">
+            <h2>snake?</h2>
+            <canvas id="sankeCanvas" width="400" height="400"></canvas>
+            <div class="sanke-ctrl">
+                <button id="startSanke">start</button>
+                <button id="stopSanke">stop</button>
             </div>
         </section>
     </main>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Randomize Data Function
             function getRandomData(count, max) {
                 return Array.from({ length: count }, () => Math.floor(Math.random() * max) + 1);
             }
 
-            // Generate Heatmap Points
             function generateInteractiveHeatmap(containerId, numPoints) {
                 const container = document.getElementById(containerId);
-                container.innerHTML = ''; // Clear existing points
+                container.innerHTML = '';
                 const containerWidth = container.offsetWidth;
                 const containerHeight = container.offsetHeight;
 
                 for (let i = 0; i < numPoints; i++) {
-                    const size = Math.random() * 60 + 20; // Random size between 20 and 80
+                    const size = Math.random() * 60 + 20;
                     const x = Math.random() * (containerWidth - size);
                     const y = Math.random() * (containerHeight - size);
                     const intensity = Math.random() * 255;
@@ -190,7 +218,6 @@
                 }
             }
 
-            // Initialize Charts
             const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
             new Chart(topProductsCtx, {
                 type: 'bar',
@@ -271,10 +298,96 @@
                 }
             });
 
-            // Generate Interactive Heatmap
-            generateInteractiveHeatmap('heatmap', 50); // Generate 50 random points
+            generateInteractiveHeatmap('heatmap', 50);
+
+            // sanke code
+            const sankeCanvas = document.getElementById('sankeCanvas');
+            const sankeCtx = sankeCanvas.getContext('2d');
+            let sankeInterval;
+            let sx = 10;
+            let sy = 10;
+            let gs = 20;
+            let tc = 20;
+            let xv = 0;
+            let yv = 0;
+            let trail = [];
+            let tail = 5;
+            let ax = Math.floor(Math.random()*tc);
+            let ay = Math.floor(Math.random()*tc);
+
+            function sankeGame() {
+                sx += xv;
+                sy += yv;
+                if (sx < 0) sx = tc - 1;
+                if (sx > tc - 1) sx = 0;
+                if (sy < 0) sy = tc - 1;
+                if (sy > tc - 1) sy = 0;
+                
+                sankeCtx.fillStyle = "#222";
+                sankeCtx.fillRect(0,0,sankeCanvas.width,sankeCanvas.height);
+
+                sankeCtx.fillStyle = "red";
+                sankeCtx.fillRect(ax*gs,ay*gs,gs-2,gs-2);
+
+                sankeCtx.fillStyle = "lime";
+                for (let i=0;i<trail.length;i++) {
+                    sankeCtx.fillRect(trail[i].x*gs,trail[i].y*gs,gs-2,gs-2);
+                    if (trail[i].x===sx && trail[i].y===sy) {
+                        tail=5;
+                    }
+                }
+
+                trail.push({x:sx,y:sy});
+                while (trail.length>tail) {
+                    trail.shift();
+                }
+
+                if (ax===sx && ay===sy) {
+                    tail++;
+                    ax=Math.floor(Math.random()*tc);
+                    ay=Math.floor(Math.random()*tc);
+                }
+            }
+
+            document.addEventListener('keydown',(e)=>{
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        xv=-1;yv=0;
+                        break;
+                    case 'ArrowUp':
+                        xv=0;yv=-1;
+                        break;
+                    case 'ArrowRight':
+                        xv=1;yv=0;
+                        break;
+                    case 'ArrowDown':
+                        xv=0;yv=1;
+                        break;
+                }
+            });
+
+            const startSanke=document.getElementById('startSanke');
+            const stopSanke=document.getElementById('stopSanke');
+            startSanke.addEventListener('click',()=>{
+                clearInterval(sankeInterval);
+                sankeInterval=setInterval(sankeGame,100);
+            });
+            stopSanke.addEventListener('click',()=>{
+                clearInterval(sankeInterval);
+            });
+
+            // reveal sanke
+            const footerLink = document.createElement('p');
+            footerLink.innerHTML='Try a <a href="#" id="revealSanke" style="color:#1abc9c;text-decoration:underline;">Snake ?</a> maybe';
+            document.querySelector('footer').appendChild(footerLink);
+
+            document.getElementById('revealSanke').addEventListener('click',(ev)=>{
+                ev.preventDefault();
+                document.getElementById('sankeZone').classList.toggle('hidden');
+            });
         });
     </script>
+
     <footer style="text-align: center; padding: 1em; background-color: #333; color: white; margin-top: 2em;">
         <p>© 2024 <a href="https://dood.do/" target="_blank" style="color: #1abc9c; text-decoration: none;">Shopermotion by Dood</a>. All rights reserved.</p>
     </footer>
